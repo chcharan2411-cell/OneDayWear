@@ -1,0 +1,115 @@
+.order-success-page {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: #ffffff;
+}
+
+.order-success-container {
+  width: 100%;
+  max-width: 650px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #111111;
+  border-radius: 50%;
+
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.success-label {
+  margin-bottom: 14px;
+
+  color: #777777;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.order-success-container h1 {
+  margin-bottom: 20px;
+
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -2.5px;
+}
+
+.success-message {
+  max-width: 500px;
+  margin: 0 auto;
+
+  color: #777777;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.success-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  margin-top: 40px;
+}
+
+.success-button {
+  display: inline-block;
+  padding: 16px 25px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+
+  transition: all 0.25s ease;
+}
+
+.success-button.primary {
+  background: #111111;
+  color: #ffffff;
+}
+
+.success-button.primary:hover {
+  background: #333333;
+  transform: translateY(-2px);
+}
+
+.success-button.secondary {
+  border: 1px solid #111111;
+  color: #111111;
+}
+
+.success-button.secondary:hover {
+  background: #111111;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .order-success-page {
+    padding: 60px 20px;
+  }
+
+  .order-success-container h1 {
+    font-size: 34px;
+    letter-spacing: -1.5px;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .success-button {
+    width: 100%;
+  }
+}

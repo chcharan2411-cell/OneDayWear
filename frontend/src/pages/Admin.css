@@ -1,0 +1,279 @@
+.admin-page {
+  min-height: calc(100vh - 72px);
+  padding: 70px 6%;
+  background: #f7f7f5;
+}
+
+.admin-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 55px;
+}
+
+.admin-eyebrow {
+  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.admin-header h1 {
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+  font-weight: 800;
+}
+
+.admin-subtitle {
+  margin-top: 22px;
+  max-width: 520px;
+  color: #666;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.admin-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.admin-status span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #d7d7d3;
+  border: 1px solid #d7d7d3;
+}
+
+.admin-stat-card {
+  min-height: 190px;
+  padding: 25px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.admin-stat-card.warning {
+  background: #111;
+  color: #fff;
+}
+
+.admin-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-stat-top span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.admin-stat-card strong {
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -2px;
+  font-weight: 700;
+}
+
+.admin-overview {
+  margin-top: 55px;
+  background: #111;
+  color: #fff;
+}
+
+.admin-overview-header {
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
+}
+
+.admin-overview-header p {
+  margin-bottom: 7px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #999;
+}
+
+.admin-overview-header h2 {
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+
+.admin-overview-header span {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #aaa;
+}
+
+.admin-overview-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.admin-overview-content div {
+  padding: 35px 30px;
+  border-right: 1px solid #333;
+}
+
+.admin-overview-content div:last-child {
+  border-right: none;
+}
+
+.admin-overview-content span {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #999;
+}
+
+.admin-overview-content strong {
+  font-size: 30px;
+  letter-spacing: -1px;
+}
+
+.admin-loading,
+.admin-error {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.admin-loading p {
+  margin-top: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.admin-loading-line {
+  width: 100px;
+  height: 2px;
+  background: #111;
+  animation: adminLoading 1s infinite alternate;
+}
+
+@keyframes adminLoading {
+  from {
+    width: 40px;
+  }
+
+  to {
+    width: 140px;
+  }
+}
+
+.admin-error svg {
+  margin-bottom: 20px;
+}
+
+.admin-error h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.admin-error p {
+  max-width: 500px;
+  color: #666;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.admin-error button {
+  margin-top: 25px;
+  padding: 13px 28px;
+  border: none;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+@media (max-width: 1000px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .admin-page {
+    padding: 45px 20px;
+  }
+
+  .admin-header {
+    display: block;
+    margin-bottom: 35px;
+  }
+
+  .admin-header h1 {
+    font-size: 44px;
+    letter-spacing: -2px;
+  }
+
+  .admin-status {
+    margin-top: 25px;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-stat-card {
+    min-height: 160px;
+  }
+
+  .admin-overview-header {
+    padding: 25px 20px;
+  }
+
+  .admin-overview-content {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-overview-content div {
+    border-right: none;
+    border-bottom: 1px solid #333;
+  }
+
+  .admin-overview-content div:last-child {
+    border-bottom: none;
+  }
+
+  .admin-stat-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+}

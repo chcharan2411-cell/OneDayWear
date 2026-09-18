@@ -1,0 +1,25 @@
+.website-button-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 70px 20px;
+}
+
+.go-to-website-btn {
+    display: inline-block;
+    padding: 18px 45px;
+    background: #e50914;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-radius: 4px;
+    transition: 0.3s ease;
+}
+
+.go-to-website-btn:hover {
+    background: white;
+    color: #e50914;
+    transform: translateY(-3px);
+}

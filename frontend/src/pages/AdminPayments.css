@@ -1,0 +1,630 @@
+/* ================================
+   ADMIN PAYMENTS PAGE
+================================ */
+
+.admin-payments-page {
+  min-height: 100vh;
+  padding: 55px 68px 80px;
+  background: #fff;
+  color: #111;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.admin-payments-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 45px;
+}
+
+.payment-breadcrumb {
+  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: #777;
+}
+
+.admin-payments-header h1 {
+  margin: 0;
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.admin-payments-header p {
+  margin: 15px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+
+/* ================================
+   REFRESH BUTTON
+================================ */
+
+.payment-refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-refresh-button:hover {
+  background: #fff;
+  color: #111;
+}
+
+
+/* ================================
+   STATISTICS
+================================ */
+
+.admin-payment-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 35px;
+}
+
+.admin-payment-stat {
+  padding: 24px 25px;
+
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.admin-payment-stat span {
+  display: block;
+
+  margin-bottom: 12px;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.admin-payment-stat strong {
+  display: block;
+
+  font-size: 32px;
+  font-weight: 700;
+}
+
+
+/* ================================
+   TOOLBAR
+================================ */
+
+.admin-payment-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.admin-payment-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  max-width: 500px;
+
+  padding: 12px 14px;
+
+  border-bottom: 1px solid #111;
+}
+
+.admin-payment-search svg {
+  flex-shrink: 0;
+}
+
+.admin-payment-search input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.admin-payment-search input::placeholder {
+  color: #999;
+}
+
+.admin-payment-toolbar select {
+  min-width: 170px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #ccc;
+  outline: none;
+
+  background: #fff;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+}
+
+
+/* ================================
+   TABLE
+================================ */
+
+.admin-payments-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+
+  border-top: 1px solid #111;
+}
+
+.admin-payments-table {
+  width: 100%;
+  min-width: 900px;
+
+  border-collapse: collapse;
+}
+
+.admin-payments-table thead th {
+  padding: 16px 12px;
+
+  border-bottom: 1px solid #111;
+
+  text-align: left;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #555;
+}
+
+.admin-payments-table tbody td {
+  padding: 22px 12px;
+
+  border-bottom: 1px solid #e5e5e5;
+
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.admin-payments-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.admin-payments-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.admin-payments-table td strong {
+  font-weight: 600;
+}
+
+
+/* ================================
+   PAYMENT STATUS
+================================ */
+
+.payment-status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+/* PENDING */
+
+.payment-status-pending {
+  background: #fff4d6;
+  color: #8a6500;
+}
+
+
+/* SUCCESS */
+
+.payment-status-success {
+  background: #e5f7ec;
+  color: #137333;
+}
+
+
+/* FAILED */
+
+.payment-status-failed {
+  background: #ffe7e7;
+  color: #b42318;
+}
+
+
+/* REFUNDED */
+
+.payment-status-refunded {
+  background: #eee;
+  color: #555;
+}
+
+
+/* ================================
+   ACTIONS
+================================ */
+
+.payment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-actions button {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ccc;
+  background: #fff;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.payment-view-button:hover {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.payment-refund-button {
+  color: #a33;
+}
+
+.payment-refund-button:hover {
+  background: #a33;
+  border-color: #a33;
+  color: #fff;
+}
+
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.admin-payments-empty {
+  height: 180px;
+
+  text-align: center !important;
+  vertical-align: middle !important;
+
+  font-size: 11px !important;
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  color: #888;
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+.admin-payments-loading {
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+}
+
+.admin-payments-loading p {
+  margin: 0;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.payment-loading-spin {
+  animation: paymentSpin 1s linear infinite;
+}
+
+@keyframes paymentSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ================================
+   ERROR
+================================ */
+
+.admin-payments-error {
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.admin-payments-error h2 {
+  margin: 15px 0 8px;
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.admin-payments-error p {
+  max-width: 500px;
+
+  margin: 0 0 20px;
+
+  color: #777;
+  font-size: 13px;
+}
+
+.admin-payments-error button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 11px 18px;
+
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+
+/* ================================
+   MODAL
+================================ */
+
+.admin-payment-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.admin-payment-modal {
+  width: 100%;
+  max-width: 620px;
+
+  background: #fff;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+
+/* Modal Header */
+
+.admin-payment-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 25px 28px;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-payment-modal-header span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+.admin-payment-modal-header h2 {
+  margin: 7px 0 0;
+
+  font-size: 28px;
+}
+
+.admin-payment-modal-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid #ddd;
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.admin-payment-modal-header button:hover {
+  background: #111;
+  color: #fff;
+}
+
+
+/* Payment Details */
+
+.admin-payment-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.admin-payment-details > div {
+  padding: 20px 28px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.admin-payment-details span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #888;
+}
+
+.admin-payment-details strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* Modal Refund */
+
+.payment-modal-refund {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: calc(100% - 56px);
+
+  margin: 25px 28px;
+
+  padding: 13px;
+
+  border: 1px solid #a33;
+  background: #fff;
+  color: #a33;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.payment-modal-refund:hover {
+  background: #a33;
+  color: #fff;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+
+  .admin-payments-page {
+    padding: 40px 30px 60px;
+  }
+
+  .admin-payment-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-payments-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-payment-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-payment-search {
+    max-width: none;
+  }
+
+  .admin-payment-toolbar select {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .admin-payments-page {
+    padding: 30px 18px 50px;
+  }
+
+  .admin-payments-header h1 {
+    font-size: 40px;
+  }
+
+  .admin-payment-modal-overlay {
+    padding: 15px;
+  }
+
+  .admin-payment-details {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-payment-details > div {
+    padding: 16px 20px;
+  }
+
+  .admin-payment-modal-header {
+    padding: 20px;
+  }
+
+  .payment-modal-refund {
+    width: calc(100% - 40px);
+    margin: 20px;
+  }
+}

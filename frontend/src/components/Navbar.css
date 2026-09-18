@@ -1,0 +1,287 @@
+.navbar {
+  width: 100%;
+  height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  height: 100%;
+  margin: 0 auto;
+
+  padding: 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+
+.logo {
+  color: #111111;
+  text-decoration: none;
+
+  font-size: 24px;
+  font-weight: 800;
+
+  letter-spacing: -1px;
+
+  white-space: nowrap;
+}
+
+/* Navigation */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-links a {
+  color: #111111;
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+
+  transition: opacity 0.2s ease;
+}
+
+.nav-links a:hover {
+  opacity: 0.5;
+}
+
+/* Actions */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nav-icon {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  color: #111111;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  padding: 4px;
+}
+
+.nav-icon:hover {
+  opacity: 0.5;
+}
+
+/* Cart */
+
+.cart-count {
+  position: absolute;
+
+  top: -6px;
+  right: -7px;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+
+  background: #111111;
+  color: #ffffff;
+
+  font-size: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+
+  .nav-links {
+    gap: 15px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .navbar-container {
+    padding: 0 18px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .orders-link {
+  color: #111111;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: opacity 0.2s ease;
+}
+
+.orders-link:hover {
+  opacity: 0.55;
+}
+
+.nav-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.wishlist-nav-icon {
+  position: relative;
+}
+
+.wishlist-count {
+  position: absolute;
+  top: -7px;
+  right: -8px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+}
+/* =========================================
+   NAVBAR SEARCH
+========================================= */
+
+.search-nav-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-search-container {
+  width: 100%;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+  background: #ffffff;
+  padding: 16px 32px;
+}
+
+.navbar-search-form {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: #f5f5f5;
+
+  padding: 12px 16px;
+}
+
+.navbar-search-form input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 14px;
+  color: #111111;
+}
+
+.navbar-search-form input::placeholder {
+  color: #888888;
+}
+
+.navbar-search-submit {
+  border: none;
+  background: #111111;
+  color: #ffffff;
+
+  padding: 10px 18px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+}
+
+.navbar-search-submit:hover {
+  background: #333333;
+}
+
+.navbar-search-clear {
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  color: #777777;
+}
+
+.navbar-search-clear:hover {
+  color: #111111;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .navbar-search-container {
+    padding: 12px 16px;
+  }
+
+  .navbar-search-form {
+    padding: 10px 12px;
+  }
+
+  .navbar-search-submit {
+    padding: 9px 12px;
+  }
+
+}
