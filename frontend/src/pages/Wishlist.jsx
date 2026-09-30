@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 import { getProducts } from "../services/productService";
+import { formatImageUrl } from "../utils/imageUtil";
 import "./Wishlist.css";
 
 function Wishlist() {
@@ -107,7 +108,7 @@ function Wishlist() {
                 >
                   {product?.imageUrl ? (
                     <img
-                      src={product.imageUrl}
+                      src={formatImageUrl(product.imageUrl)}
                       alt={item.productName}
                     />
                   ) : (

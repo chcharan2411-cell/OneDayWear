@@ -46,3 +46,4 @@ BOOT-INF/
 # ==============================
 .DS_Store
 Thumbs.db
+.tools/

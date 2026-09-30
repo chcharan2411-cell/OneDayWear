@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import { Search } from "lucide-react";
 import { getProducts } from "../services/productService";
+import { formatImageUrl } from "../utils/imageUtil";
 import "./Products.css";
 
 // =========================================================
@@ -827,7 +828,7 @@ function Products() {
 
                         <img
                           src={
-                            product.imageUrl
+                            formatImageUrl(product.imageUrl)
                           }
                           alt={
                             product.productName

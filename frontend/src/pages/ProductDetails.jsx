@@ -12,6 +12,7 @@ import "./ProductDetails.css";
 import { useCart } from "../context/CartContext";
 import { Heart, Star } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
+import { formatImageUrl } from "../utils/imageUtil";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -202,7 +203,7 @@ function ProductDetails() {
 
           {product.imageUrl ? (
             <img
-              src={product.imageUrl}
+              src={formatImageUrl(product.imageUrl)}
               alt={product.productName}
             />
           ) : (

@@ -17,6 +17,7 @@ import {
 } from "../services/adminProductService";
 
 import "./AdminProducts.css";
+import { formatImageUrl } from "../utils/imageUtil";
 
 const emptyForm = {
   productName: "",
@@ -595,7 +596,7 @@ const handleIncreaseStock = async (id) => {
                           {product.imageUrl ? (
                             <img
                               src={
-                                product.imageUrl
+                                formatImageUrl(product.imageUrl)
                               }
                               alt={
                                 product.productName

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { API_BASE_URL } from "../services/api";
+import { formatImageUrl } from "../utils/imageUtil";
 import "./Checkout.css";
 
 /* =========================================================
@@ -954,7 +955,7 @@ function Checkout() {
 
                       <img
                         src={
-                          item.imageUrl
+                          formatImageUrl(item.imageUrl)
                         }
 
                         alt={

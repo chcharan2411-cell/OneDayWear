@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { formatImageUrl } from "../utils/imageUtil";
 import "./Cart.css";
 
 function Cart() {
@@ -57,7 +58,7 @@ const securityDepositTotal = cartItems.reduce(
 
                 {item.imageUrl ? (
                   <img
-                    src={item.imageUrl}
+                    src={formatImageUrl(item.imageUrl)}
                     alt={item.productName}
                   />
                 ) : (
