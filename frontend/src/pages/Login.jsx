@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../services/api";
 import "./Login.css";
 
 function Login() {
@@ -20,9 +21,9 @@ function Login() {
       setError("");
 
       const response = await axios.post(
-        "http://localhost:8080/auth/login",
+        `${API_BASE_URL}/auth/login`,
         {
-          email,
+          email: email.trim(),
           password,
         }
       );
@@ -30,7 +31,7 @@ function Login() {
       const data = response.data;
 
       localStorage.setItem("token", data.token);
-localStorage.setItem("userEmail", email);
+localStorage.setItem("userEmail", email.trim());
 localStorage.setItem("userRole", data.role);
 
 if (data.role === "ADMIN") {
@@ -41,11 +42,12 @@ if (data.role === "ADMIN") {
     } catch (err) {
       console.error("Login error:", err);
 
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Invalid email or password.");
-      }
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        "Invalid email or password.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -62,9 +64,7 @@ if (data.role === "ADMIN") {
         {/* Left side branding */}
         <div className="login-brand">
 
-          <div className="login-spider-symbol">
-            🕷
-          </div>
+          <div className="login-spider-symbol">{"\u{1F577}"}</div>
 
           <p className="login-eyebrow">
             ONE DAY WEAR

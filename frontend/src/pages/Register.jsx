@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ArrowRight, Mail, CheckCircle } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL } from "../services/api";
 import "./Register.css";
 
 function Register() {
@@ -78,7 +79,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/register",
+        `${API_BASE_URL}/auth/register`,
         {
           fullName: formData.fullName.trim(),
           email: formData.email.trim(),
@@ -146,7 +147,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/auth/register/verify",
+        `${API_BASE_URL}/auth/register/verify`,
         {
           email: formData.email.trim(),
           otp: cleanOtp,

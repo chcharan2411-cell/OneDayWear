@@ -1,13 +1,13 @@
 package com.onedaywear.auth;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@SpringBootTest
 class AuthServiceApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void printHash() {
+		System.out.println("BCRYPT_RESULT:" + new BCryptPasswordEncoder().encode("Charan@33Z"));
 	}
 
 }

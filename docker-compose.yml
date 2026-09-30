@@ -1,0 +1,373 @@
+services:
+  # ============================================================
+  # MySQL Database Infrastructure
+  # ============================================================
+  mysql:
+    image: mysql:8.0
+    container_name: onedaywear-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Charan@33Z}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Netflix Eureka Discovery Server
+  # ============================================================
+  discovery-server:
+    build:
+      context: ./backend/discovery-server
+      dockerfile: Dockerfile
+    container_name: onedaywear-discovery-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    environment:
+      PORT: 8761
+      EUREKA_HOSTNAME: discovery-server
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_SERVER_ENABLE_SELF_PRESERVATION: "false"
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # API Gateway
+  # ============================================================
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+      dockerfile: Dockerfile
+    container_name: onedaywear-api-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+    environment:
+      PORT: 8080
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173}
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Auth Service
+  # ============================================================
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-auth-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8081
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_auth
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-ThisIsASecretKeyForOneDayWearApplicationJWTTokenGeneration123456789}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      NOTIFICATION_SERVICE_URL: ${NOTIFICATION_SERVICE_URL:-http://notification-service:8085}
+      APP_GATEWAY_URL: ${APP_GATEWAY_URL:-http://api-gateway:8080}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Product Service
+  # ============================================================
+  product-service:
+    build:
+      context: ./backend/product-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-product-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8082
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_product
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-ThisIsASecretKeyForOneDayWearApplicationJWTTokenGeneration123456789}
+      FILE_UPLOAD_DIR: /app/uploads
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_product?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Order Service
+  # ============================================================
+  order-service:
+    build:
+      context: ./backend/order-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-order-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8083
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_order
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-ThisIsASecretKeyForOneDayWearApplicationJWTTokenGeneration123456789}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_order?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    volumes:
+      - ./backend/order-service/target/order-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Payment Service
+  # ============================================================
+  payment-service:
+    build:
+      context: ./backend/payment-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-payment-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8084
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_payment
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_TdBVRbILFqy6UQ}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-L8bnlNO5LcyL31OQG9fahw3D}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_payment?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    extra_hosts:
+      - "api.razorpay.com:3.7.43.60"
+      - "api.razorpay.com:52.66.120.20"
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Notification Service
+  # ============================================================
+  notification-service:
+    build:
+      context: ./backend/notification-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-notification-service
+    restart: unless-stopped
+    depends_on:
+      - discovery-server
+    environment:
+      PORT: 8085
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-465}
+      MAIL_USERNAME: ${MAIL_USERNAME:-chcharan2144@gmail.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-mscamecezrgorlnp}
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Cart Service
+  # ============================================================
+  cart-service:
+    build:
+      context: ./backend/cart-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-cart-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8086
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_cart
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_cart?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Wishlist Service
+  # ============================================================
+  wishlist-service:
+    build:
+      context: ./backend/wishlist-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-wishlist-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8087
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_wishlist
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_wishlist?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Review Service
+  # ============================================================
+  review-service:
+    build:
+      context: ./backend/review-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-review-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8088
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_review
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-ThisIsASecretKeyForOneDayWearApplicationJWTTokenGeneration123456789}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_review?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Inventory Service
+  # ============================================================
+  inventory-service:
+    build:
+      context: ./backend/inventory-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-inventory-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    environment:
+      PORT: 8089
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: onedaywear_inventory
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-Charan@33Z}
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_inventory?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    networks:
+      - onedaywear-network
+
+  # ============================================================
+  # Admin Service
+  # ============================================================
+  admin-service:
+    build:
+      context: ./backend/admin-service
+      dockerfile: Dockerfile
+    container_name: onedaywear-admin-service
+    restart: unless-stopped
+    depends_on:
+      - discovery-server
+    environment:
+      PORT: 9093
+      EUREKA_URL: http://discovery-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-ThisIsASecretKeyForOneDayWearApplicationJWTTokenGeneration123456789}
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+    init: true
+    volumes:
+      - ./backend/admin-service/target/admin-service-0.0.1-SNAPSHOT.jar:/app/app.jar:ro
+    networks:
+      - onedaywear-network
+
+# ============================================================
+# Networks & Volumes
+# ============================================================
+networks:
+  onedaywear-network:
+    name: onedaywear-network
+    driver: bridge
+
+volumes:
+  mysql_data:
+    name: onedaywear-mysql-data

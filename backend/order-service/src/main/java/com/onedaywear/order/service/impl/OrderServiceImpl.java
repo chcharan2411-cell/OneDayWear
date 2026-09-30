@@ -86,12 +86,7 @@ public class OrderServiceImpl implements OrderService {
 	    BigDecimal securityDeposit = product.getSecurityDeposit()
 	            .multiply(BigDecimal.valueOf(request.getQuantity()));
 
-	    // First decrease stock
-	    productClient.decreaseStock(
-	            request.getProductId(),
-	            request.getQuantity());
-
-	    // Create Order
+	    // Create Order with PENDING status (Stock will ONLY be deducted once payment is 100% completed)
 	    Order order = Order.builder()
 	            .userEmail(userEmail)
 	            .productId(request.getProductId())
@@ -105,16 +100,6 @@ public class OrderServiceImpl implements OrderService {
 
 	    // Save Order
 	    Order savedOrder = orderRepository.save(order);
-
-	    NotificationRequest notification =
-	            NotificationRequest.builder()
-	                    .to(userEmail)
-	                    .customerName(userEmail)
-	                    .orderId(savedOrder.getId())
-	                    .notificationType(NotificationType.ORDER_CONFIRMATION)
-	                    .build();
-
-	    notificationClient.sendNotification(notification);
 
 	    return mapToResponse(savedOrder);
 	}
@@ -155,14 +140,48 @@ public class OrderServiceImpl implements OrderService {
 
         OrderStatus oldStatus = order.getStatus();
 
-        // Restore stock only once
-        if ((status == OrderStatus.CANCELLED || status == OrderStatus.RETURNED)
-                && oldStatus != OrderStatus.CANCELLED
-                && oldStatus != OrderStatus.RETURNED) {
+        // Deduct stock and send confirmation ONLY when payment is 100% completed and order is CONFIRMED
+        if (status == OrderStatus.CONFIRMED && oldStatus != OrderStatus.CONFIRMED) {
+            try {
+                productClient.decreaseStock(
+                        order.getProductId(),
+                        order.getQuantity());
+            } catch (Exception e) {
+                System.err.println("Error deducting stock on payment confirmation: " + e.getMessage());
+            }
 
-            productClient.increaseStock(
-                    order.getProductId(),
-                    order.getQuantity());
+            try {
+                NotificationRequest notification =
+                        NotificationRequest.builder()
+                                .to(order.getUserEmail())
+                                .customerName(order.getUserEmail())
+                                .orderId(order.getId())
+                                .notificationType(NotificationType.ORDER_CONFIRMATION)
+                                .build();
+
+                java.util.concurrent.CompletableFuture.runAsync(() -> {
+                    try {
+                        notificationClient.sendNotification(notification);
+                    } catch (Exception e) {
+                        System.err.println("Error sending order confirmation notification: " + e.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Error creating order confirmation notification: " + e.getMessage());
+            }
+        }
+
+        // Restore stock only once if order was confirmed and is now cancelled or returned
+        if ((status == OrderStatus.CANCELLED || status == OrderStatus.RETURNED)
+                && oldStatus == OrderStatus.CONFIRMED) {
+
+            try {
+                productClient.increaseStock(
+                        order.getProductId(),
+                        order.getQuantity());
+            } catch (Exception e) {
+                System.err.println("Error restoring stock on order cancellation: " + e.getMessage());
+            }
         }
 
         order.setStatus(status);

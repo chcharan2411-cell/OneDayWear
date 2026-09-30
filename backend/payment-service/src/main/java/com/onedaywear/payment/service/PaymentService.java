@@ -21,5 +21,8 @@ public interface PaymentService {
     PaymentResponse refundPayment(
             Long paymentId);
 
+    PaymentResponse confirmPayment(
+            Long paymentId);
+
     Long getPaymentCount();
 }

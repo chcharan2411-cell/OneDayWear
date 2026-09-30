@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { API_BASE_URL } from "../services/api";
 import "./Checkout.css";
 
 /* =========================================================
@@ -89,6 +90,9 @@ function Checkout() {
     if (!token) {
       navigate("/login");
     }
+
+    // Preload Razorpay SDK script
+    loadRazorpayScript();
 
   }, [navigate]);
 
@@ -186,7 +190,7 @@ function Checkout() {
 
     const razorpayResponse =
       await fetch(
-        `http://localhost:8080/payments/razorpay/order/${orderId}`,
+        `${API_BASE_URL}/payments/razorpay/order/${orderId}`,
         {
           method: "POST",
 
@@ -281,7 +285,7 @@ function Checkout() {
 
             const verifyResponse =
               await fetch(
-                "http://localhost:8080/payments/razorpay/verify",
+                `${API_BASE_URL}/payments/razorpay/verify`,
                 {
                   method: "POST",
 
@@ -559,7 +563,7 @@ function Checkout() {
 
           const response =
             await fetch(
-              "http://localhost:8080/orders",
+              `${API_BASE_URL}/orders`,
               {
                 method: "POST",
 

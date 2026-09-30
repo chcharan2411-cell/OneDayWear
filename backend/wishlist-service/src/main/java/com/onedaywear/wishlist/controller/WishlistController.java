@@ -12,7 +12,6 @@ import com.onedaywear.wishlist.service.WishlistService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/wishlist")
 public class WishlistController {
 

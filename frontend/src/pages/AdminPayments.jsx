@@ -5,12 +5,14 @@ import {
   Eye,
   RotateCcw,
   X,
+  CheckCircle,
 } from "lucide-react";
 
 import {
   getPaymentCount,
   getPaymentByOrderId,
   refundPayment,
+  confirmPayment,
 } from "../services/adminPaymentService";
 
 import { getAdminOrders } from "../services/adminOrderService";
@@ -49,19 +51,27 @@ function AdminPayments() {
       // Get all orders
       const orders = await getAdminOrders();
 
-      const orderIds = [
-        ...new Set(
-          orders
-            .map((order) => order.id)
-            .filter(Boolean)
-        ),
-      ];
+      const ordersMap = {};
+      (orders || []).forEach((order) => {
+        if (order && order.id) {
+          ordersMap[order.id] = order;
+        }
+      });
+
+      const orderIds = Object.keys(ordersMap);
 
       // Find payment for each order
       const paymentResults = await Promise.all(
         orderIds.map(async (orderId) => {
           try {
-            return await getPaymentByOrderId(orderId);
+            const payment = await getPaymentByOrderId(orderId);
+            if (payment) {
+              return {
+                ...payment,
+                order: ordersMap[orderId],
+              };
+            }
+            return null;
           } catch (error) {
             // Order may not have payment
             return null;
@@ -75,9 +85,12 @@ function AdminPayments() {
       setPayments(validPayments);
 
       // Get payment count
-      const count = await getPaymentCount();
-
-      setPaymentCount(count || 0);
+      try {
+        const count = await getPaymentCount();
+        setPaymentCount(count || validPayments.length);
+      } catch {
+        setPaymentCount(validPayments.length);
+      }
 
     } catch (error) {
       console.error(
@@ -103,6 +116,64 @@ function AdminPayments() {
   }, []);
 
   // =====================================================
+  // CONFIRM PAYMENT (ADMIN MANUAL CONFIRM)
+  // =====================================================
+
+  const handleConfirm = async (paymentId) => {
+    const confirmed = window.confirm(
+      `Confirm payment #${paymentId}? This will set payment status to SUCCESS and order status to CONFIRMED.`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const updatedPayment =
+        await confirmPayment(paymentId);
+
+      setPayments((currentPayments) =>
+        currentPayments.map((payment) =>
+          payment.id === paymentId
+            ? {
+                ...updatedPayment,
+                order: {
+                  ...payment.order,
+                  status: "CONFIRMED",
+                },
+              }
+            : payment
+        )
+      );
+
+      if (
+        selectedPayment?.id === paymentId
+      ) {
+        setSelectedPayment((current) => ({
+          ...updatedPayment,
+          order: {
+            ...current?.order,
+            status: "CONFIRMED",
+          },
+        }));
+      }
+
+      alert("Payment and order confirmed successfully!");
+
+    } catch (error) {
+      console.error(
+        "Confirm payment error:",
+        error
+      );
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to confirm payment."
+      );
+    }
+  };
+
+  // =====================================================
   // REFUND
   // =====================================================
 
@@ -122,7 +193,13 @@ function AdminPayments() {
       setPayments((currentPayments) =>
         currentPayments.map((payment) =>
           payment.id === paymentId
-            ? updatedPayment
+            ? {
+                ...updatedPayment,
+                order: {
+                  ...payment.order,
+                  status: "RETURNED",
+                },
+              }
             : payment
         )
       );
@@ -130,7 +207,13 @@ function AdminPayments() {
       if (
         selectedPayment?.id === paymentId
       ) {
-        setSelectedPayment(updatedPayment);
+        setSelectedPayment((current) => ({
+          ...updatedPayment,
+          order: {
+            ...current?.order,
+            status: "RETURNED",
+          },
+        }));
       }
 
       alert("Payment refunded successfully.");
@@ -163,6 +246,9 @@ function AdminPayments() {
           .toLowerCase()
           .includes(search) ||
         String(payment.orderId)
+          .toLowerCase()
+          .includes(search) ||
+        String(payment.order?.userEmail || "")
           .toLowerCase()
           .includes(search) ||
         String(payment.paymentMethod || "")
@@ -458,7 +544,36 @@ function AdminPayments() {
                     </td>
 
                     <td>
-                      Order #{payment.orderId}
+                      <div>
+                        <strong>
+                          Order #{payment.orderId}
+                        </strong>
+
+                        {payment.order?.status && (
+                          <div style={{ marginTop: "4px" }}>
+                            <span
+                              className={`payment-order-status-badge status-${String(
+                                payment.order.status
+                              ).toLowerCase()}`}
+                            >
+                              Order: {payment.order.status}
+                            </span>
+                          </div>
+                        )}
+
+                        {payment.order?.userEmail && (
+                          <div
+                            style={{
+                              fontSize: "11px",
+                              color: "#777",
+                              marginTop: "3px",
+                              wordBreak: "break-all",
+                            }}
+                          >
+                            {payment.order.userEmail}
+                          </div>
+                        )}
+                      </div>
                     </td>
 
                     <td>
@@ -508,6 +623,27 @@ function AdminPayments() {
                         >
                           <Eye size={17} />
                         </button>
+
+                        {/* CONFIRM PAYMENT */}
+
+                        {payment.paymentStatus ===
+                          "PENDING" && (
+
+                          <button
+                            className="payment-confirm-button"
+                            title="Confirm payment & mark order CONFIRMED"
+                            onClick={() =>
+                              handleConfirm(
+                                payment.id
+                              )
+                            }
+                          >
+                            <CheckCircle
+                              size={17}
+                            />
+                          </button>
+
+                        )}
 
                         {/* REFUND */}
 
@@ -608,6 +744,27 @@ function AdminPayments() {
               </div>
 
               <div>
+                <span>ORDER STATUS</span>
+
+                <strong
+                  className={`payment-order-status-badge status-${String(
+                    selectedPayment.order?.status || ""
+                  ).toLowerCase()}`}
+                  style={{ display: "inline-block", width: "fit-content" }}
+                >
+                  {selectedPayment.order?.status || "-"}
+                </strong>
+              </div>
+
+              <div>
+                <span>CUSTOMER</span>
+
+                <strong style={{ wordBreak: "break-all" }}>
+                  {selectedPayment.order?.userEmail || "-"}
+                </strong>
+              </div>
+
+              <div>
                 <span>AMOUNT</span>
 
                 <strong>
@@ -653,25 +810,49 @@ function AdminPayments() {
 
             </div>
 
-            {selectedPayment.paymentStatus ===
-              "SUCCESS" && (
+            <div className="admin-payment-modal-actions">
 
-              <button
-                className="payment-modal-refund"
-                onClick={() =>
-                  handleRefund(
-                    selectedPayment.id
-                  )
-                }
-              >
+              {selectedPayment.paymentStatus ===
+                "PENDING" && (
 
-                <RotateCcw size={16} />
+                <button
+                  className="payment-modal-confirm"
+                  onClick={() =>
+                    handleConfirm(
+                      selectedPayment.id
+                    )
+                  }
+                >
 
-                REFUND PAYMENT
+                  <CheckCircle size={16} />
 
-              </button>
+                  CONFIRM PAYMENT & ORDER
 
-            )}
+                </button>
+
+              )}
+
+              {selectedPayment.paymentStatus ===
+                "SUCCESS" && (
+
+                <button
+                  className="payment-modal-refund"
+                  onClick={() =>
+                    handleRefund(
+                      selectedPayment.id
+                    )
+                  }
+                >
+
+                  <RotateCcw size={16} />
+
+                  REFUND PAYMENT
+
+                </button>
+
+              )}
+
+            </div>
 
           </div>
 

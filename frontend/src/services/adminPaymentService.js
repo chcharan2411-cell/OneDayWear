@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const PAYMENT_URL = "http://localhost:8080/payments";
+const PAYMENT_URL = `${API_BASE_URL}/payments`;
 
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");
@@ -47,6 +48,17 @@ export const getPaymentByOrderId = async (orderId) => {
 export const refundPayment = async (paymentId) => {
   const response = await axios.put(
     `${PAYMENT_URL}/${paymentId}/refund`,
+    {},
+    getAuthConfig()
+  );
+
+  return response.data;
+};
+
+// Admin confirm payment (mark as SUCCESS + confirm order)
+export const confirmPayment = async (paymentId) => {
+  const response = await axios.put(
+    `${PAYMENT_URL}/${paymentId}/confirm`,
     {},
     getAuthConfig()
   );

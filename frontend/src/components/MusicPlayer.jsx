@@ -5,6 +5,7 @@ function MusicPlayer() {
   const currentTrackRef = useRef(0);
 
   const musicList = [
+    "/music/jadal-zamana.mp3",
     "/music/peddi-music.mp3",
     "/music/my_music.mp3",
     "/music/new_song.mp3",
@@ -17,7 +18,7 @@ function MusicPlayer() {
 
     if (!audio) return;
 
-    audio.volume = 0.35;
+    audio.volume = 0.90;
 
     const startMusic = async () => {
       try {

@@ -12,7 +12,7 @@ public class ProductResponse {
 
     private Long id;
 
-    private String name;
+    private String productName;
 
     private BigDecimal rentalPrice;
 

@@ -25,6 +25,16 @@ public class ReviewController {
     }
 
     // ===============================
+    // GET ALL REVIEWS
+    // ===============================
+
+    @GetMapping
+    public ResponseEntity<List<ReviewResponse>> getAllReviews() {
+        return ResponseEntity.ok(
+                reviewService.getAllReviews());
+    }
+
+    // ===============================
     // ADD REVIEW
     // LOGGED-IN USER
     // ===============================

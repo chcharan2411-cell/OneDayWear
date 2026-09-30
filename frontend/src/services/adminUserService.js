@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const API_URL = "http://localhost:9093/admin/users";
+const API_URL = `${API_BASE_URL}/admin/users`;
 
 const getAuthHeaders = () => {
   const token =

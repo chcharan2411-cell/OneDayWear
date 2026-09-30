@@ -78,7 +78,7 @@ public class CartServiceImpl implements CartService {
         return CartResponse.builder()
                 .cartId(savedCart.getId())
                 .productId(product.getId())
-                .productName(product.getName())
+                .productName(product.getProductName())
                 .quantity(savedCart.getQuantity())
                 .rentalPrice(product.getRentalPrice())
                 .totalPrice(product.getRentalPrice()
@@ -99,7 +99,7 @@ public class CartServiceImpl implements CartService {
                     return CartResponse.builder()
                             .cartId(cart.getId())
                             .productId(product.getId())
-                            .productName(product.getName())
+                            .productName(product.getProductName())
                             .quantity(cart.getQuantity())
                             .rentalPrice(product.getRentalPrice())
                             .totalPrice(
@@ -134,7 +134,7 @@ public class CartServiceImpl implements CartService {
         return CartResponse.builder()
                 .cartId(updatedCart.getId())
                 .productId(product.getId())
-                .productName(product.getName())
+                .productName(product.getProductName())
                 .quantity(updatedCart.getQuantity())
                 .rentalPrice(product.getRentalPrice())
                 .totalPrice(

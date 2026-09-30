@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../services/api";
 import "./MyOrders.css";
 
 function MyOrders() {
@@ -24,7 +25,7 @@ function MyOrders() {
       }
 
       const response = await axios.get(
-        "http://localhost:8080/orders/my-orders",
+        `${API_BASE_URL}/orders/my-orders`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

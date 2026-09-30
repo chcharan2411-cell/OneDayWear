@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const WISHLIST_URL = "http://localhost:8087/wishlist";
+const WISHLIST_URL = `${API_BASE_URL}/wishlist`;
 
 export const getWishlist = async (userEmail) => {
   const response = await axios.get(WISHLIST_URL, {

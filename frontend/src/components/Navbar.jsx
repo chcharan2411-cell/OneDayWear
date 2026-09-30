@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Search,
   ShoppingBag,
@@ -15,10 +15,15 @@ import { useWishlist } from "../context/WishlistContext";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("token")
   );
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [location]);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -63,14 +68,6 @@ function Navbar() {
         <Link to="/" className="logo">
           OneDayWear
         </Link>
-
-        {/* Main Navigation */}
-        <div className="nav-links">
-          <Link to="/men">MEN</Link>
-          <Link to="/women">WOMEN</Link>
-          <Link to="/collections">COLLECTIONS</Link>
-          <Link to="/new-arrivals">NEW ARRIVALS</Link>
-        </div>
 
         {/* Right Side */}
         <div className="nav-actions">

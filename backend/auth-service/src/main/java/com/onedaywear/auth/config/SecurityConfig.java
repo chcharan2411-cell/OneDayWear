@@ -52,7 +52,8 @@ public class SecurityConfig {
                     "/auth/register",
                     "/auth/register/verify",
                     "/auth/login",
-                    "/auth/count"
+                    "/auth/count",
+                    "/error"
                 ).permitAll()
 
                 // Everything else requires authentication

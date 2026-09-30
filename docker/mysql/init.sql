@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS onedaywear_auth;
+CREATE DATABASE IF NOT EXISTS onedaywear_product;
+CREATE DATABASE IF NOT EXISTS onedaywear_order;
+CREATE DATABASE IF NOT EXISTS onedaywear_payment;
+CREATE DATABASE IF NOT EXISTS onedaywear_cart;
+CREATE DATABASE IF NOT EXISTS onedaywear_wishlist;
+CREATE DATABASE IF NOT EXISTS onedaywear_review;
+CREATE DATABASE IF NOT EXISTS onedaywear_inventory;

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const PRODUCT_URL = "http://localhost:8080/products";
+const PRODUCT_URL = `${API_BASE_URL}/products`;
 
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");

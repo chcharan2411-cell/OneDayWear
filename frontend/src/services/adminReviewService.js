@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const REVIEW_URL = "http://localhost:8088/reviews";
+const REVIEW_URL = `${API_BASE_URL}/reviews`;
 
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");

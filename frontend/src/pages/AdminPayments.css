@@ -308,6 +308,16 @@
   color: #fff;
 }
 
+.payment-confirm-button {
+  color: #1a7f37;
+}
+
+.payment-confirm-button:hover {
+  background: #1a7f37;
+  border-color: #1a7f37;
+  color: #fff;
+}
+
 .payment-refund-button {
   color: #a33;
 }
@@ -316,6 +326,40 @@
   background: #a33;
   border-color: #a33;
   color: #fff;
+}
+
+.payment-order-status-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.payment-order-status-badge.status-pending {
+  background: #fff8e6;
+  color: #b07200;
+  border: 1px solid #f2d184;
+}
+
+.payment-order-status-badge.status-confirmed {
+  background: #eefbf3;
+  color: #1a7f37;
+  border: 1px solid #95d9a9;
+}
+
+.payment-order-status-badge.status-cancelled,
+.payment-order-status-badge.status-returned {
+  background: #fdf2f2;
+  color: #cf222e;
+  border: 1px solid #f8b4b4;
+}
+
+.payment-order-status-badge.status-completed {
+  background: #f0f4f9;
+  color: #0969da;
+  border: 1px solid #99c7fb;
 }
 
 
@@ -530,34 +574,56 @@
 }
 
 
-/* Modal Refund */
+/* Modal Actions */
 
-.payment-modal-refund {
+.admin-payment-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 28px 25px;
+}
+
+.payment-modal-confirm {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  width: calc(100% - 56px);
-
-  margin: 25px 28px;
-
+  width: 100%;
   padding: 13px;
-
-  border: 1px solid #a33;
-  background: #fff;
-  color: #a33;
-
+  border: 1px solid #1a7f37;
+  background: #1a7f37;
+  color: #fff;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
-
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
 
-.payment-modal-refund:hover {
+.payment-modal-confirm:hover {
+  background: #15652c;
+  border-color: #15652c;
+}
+
+.admin-payment-modal-actions .payment-modal-refund {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 13px;
+  border: 1px solid #a33;
+  background: #fff;
+  color: #a33;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-payment-modal-actions .payment-modal-refund:hover {
   background: #a33;
   color: #fff;
 }

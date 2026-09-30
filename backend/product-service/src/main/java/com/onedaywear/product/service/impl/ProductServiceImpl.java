@@ -1,6 +1,7 @@
 	package com.onedaywear.product.service.impl;
 	
 	import java.util.List;
+	import org.springframework.beans.factory.annotation.Value;
 	import org.springframework.web.multipart.MultipartFile;
 	import org.springframework.stereotype.Service;
 	import java.util.stream.Collectors;
@@ -17,8 +18,11 @@
 	public class ProductServiceImpl implements ProductService {
 	
 		private final ProductRepository productRepository;
-	
 		private final ImageStorageService imageStorageService;
+
+		@Value("${APP_GATEWAY_URL:http://localhost:8080}")
+		private String appBaseUrl;
+
 		public ProductServiceImpl(ProductRepository productRepository,
 	            ImageStorageService imageStorageService) {
 	
@@ -78,7 +82,10 @@
 	        String imageUrl = product.getImageUrl();
 
 	        if (imageUrl != null && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
-	            imageUrl = "http://localhost:8080/uploads/" + imageUrl;
+	            String base = (appBaseUrl != null && appBaseUrl.endsWith("/"))
+	                    ? appBaseUrl.substring(0, appBaseUrl.length() - 1)
+	                    : (appBaseUrl != null ? appBaseUrl : "http://localhost:8080");
+	            imageUrl = base + "/uploads/" + imageUrl;
 	        }
 
 	        return ProductResponse.builder()

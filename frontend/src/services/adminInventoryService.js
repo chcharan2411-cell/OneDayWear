@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "./api";
 
-const INVENTORY_URL = "http://localhost:8080/inventory/admin/all";
+const INVENTORY_BASE = `${API_BASE_URL}/inventory`;
 
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");
@@ -16,7 +17,7 @@ const getAuthConfig = () => {
 // Get all inventory
 export const getAdminInventory = async () => {
   const response = await axios.get(
-    INVENTORY_URL,
+    `${INVENTORY_BASE}/admin/all`,
     getAuthConfig()
   );
 
@@ -26,7 +27,7 @@ export const getAdminInventory = async () => {
 // Get inventory by product ID
 export const getInventoryByProductId = async (productId) => {
   const response = await axios.get(
-    `${INVENTORY_URL}/${productId}`,
+    `${INVENTORY_BASE}/${productId}`,
     getAuthConfig()
   );
 
@@ -36,7 +37,7 @@ export const getInventoryByProductId = async (productId) => {
 // Create inventory
 export const createInventory = async (inventory) => {
   const response = await axios.post(
-    INVENTORY_URL,
+    INVENTORY_BASE,
     inventory,
     getAuthConfig()
   );
@@ -50,7 +51,7 @@ export const updateInventory = async (
   inventory
 ) => {
   const response = await axios.put(
-    `${INVENTORY_URL}/${productId}`,
+    `${INVENTORY_BASE}/${productId}`,
     inventory,
     getAuthConfig()
   );
@@ -64,7 +65,7 @@ export const deductStock = async (
   quantity
 ) => {
   const response = await axios.post(
-    `${INVENTORY_URL}/deduct`,
+    `${INVENTORY_BASE}/deduct`,
     {
       productId,
       quantity,
@@ -81,7 +82,7 @@ export const restoreStock = async (
   quantity
 ) => {
   const response = await axios.post(
-    `${INVENTORY_URL}/restore`,
+    `${INVENTORY_BASE}/restore`,
     {
       productId,
       quantity,
@@ -95,7 +96,7 @@ export const restoreStock = async (
 // Get low-stock products
 export const getLowStockProducts = async () => {
   const response = await axios.get(
-    `${INVENTORY_URL}/low-stock`,
+    `${INVENTORY_BASE}/low-stock`,
     getAuthConfig()
   );
 
@@ -105,7 +106,7 @@ export const getLowStockProducts = async () => {
 // Get low-stock count
 export const getLowStockCount = async () => {
   const response = await axios.get(
-    `${INVENTORY_URL}/low-stock/count`,
+    `${INVENTORY_BASE}/low-stock/count`,
     getAuthConfig()
   );
 

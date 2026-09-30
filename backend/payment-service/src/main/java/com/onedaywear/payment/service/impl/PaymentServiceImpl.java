@@ -310,14 +310,6 @@ public class PaymentServiceImpl
         // DEDUCT INVENTORY
         // -----------------------------------------------------
 
-        inventoryClient.deductStock(
-                StockUpdateRequest
-                        .builder()
-                        .productId(
-                                order.getProductId())
-                        .quantity(
-                                order.getQuantity())
-                        .build());
 
         // -----------------------------------------------------
         // CONFIRM ORDER
@@ -485,6 +477,53 @@ public class PaymentServiceImpl
 
         return toResponse(
                 updatedPayment);
+    }
+
+    // =========================================================
+    // CONFIRM PAYMENT (ADMIN MANUAL CONFIRM)
+    // =========================================================
+
+    @Override
+    @Transactional
+    public PaymentResponse confirmPayment(Long paymentId) {
+
+        Payment payment = paymentRepository
+                .findById(paymentId)
+                .orElseThrow(() ->
+                        new PaymentNotFoundException("Payment Not Found"));
+
+        if (payment.getPaymentStatus() == PaymentStatus.SUCCESS) {
+            throw new PaymentAlreadyExistsException(
+                    "Payment is already confirmed as SUCCESS");
+        }
+
+        payment.setPaymentStatus(PaymentStatus.SUCCESS);
+
+        Payment updatedPayment = paymentRepository.save(payment);
+
+        // Confirm the order
+        orderClient.updateOrderStatus(
+                payment.getOrderId(),
+                "CONFIRMED");
+
+        // Send payment success notification
+        try {
+            OrderResponse order = orderClient.getOrderById(payment.getOrderId());
+            if (order != null) {
+                NotificationRequest notification = NotificationRequest
+                        .builder()
+                        .to(order.getUserEmail())
+                        .customerName(order.getUserEmail())
+                        .orderId(order.getId())
+                        .notificationType(NotificationType.PAYMENT_SUCCESS)
+                        .build();
+                notificationClient.sendNotification(notification);
+            }
+        } catch (Exception e) {
+            // Notification failure should not block payment confirmation
+        }
+
+        return toResponse(updatedPayment);
     }
 
     // =========================================================

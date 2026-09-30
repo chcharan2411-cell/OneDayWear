@@ -4,15 +4,16 @@
 .env
 .env.*
 !.env.example
-
-application.properties
-application-*.properties
+application-local.properties
+application-secret.properties
+*.secret.*
 
 # ==============================
 # Java / Spring Boot
 # ==============================
 **/target/
 *.class
+BOOT-INF/
 
 # ==============================
 # Maven
@@ -39,11 +40,6 @@ application-*.properties
 # ==============================
 **/node_modules/
 **/dist/
-
-# ==============================
-# Uploaded Files
-# ==============================
-**/uploads/
 
 # ==============================
 # OS

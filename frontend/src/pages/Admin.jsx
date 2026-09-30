@@ -10,60 +10,57 @@ import {
   Heart,
   AlertTriangle,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api, { API_BASE_URL } from "../services/api";
 import "./Admin.css";
 
 function Admin() {
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("userRole");
+
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    if (role && role !== "ADMIN") {
+      setError("Access denied. Admin privileges required.");
+      setLoading(false);
+      return;
+    }
+
     const loadDashboard = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          throw new Error("Authentication token not found");
-        }
-
-        const response = await fetch(
-          "http://localhost:9093/admin/dashboard",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            `Dashboard request failed: ${response.status}`
-          );
-        }
-
-        const data = await response.json();
-
-        setDashboard(data);
+        const response = await api.get("/admin/dashboard");
+        setDashboard(response.data);
       } catch (error) {
         console.error("Admin dashboard error:", error);
 
-        setError(
-          error.message ||
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          setError("Session expired or unauthorized. Please log in with an Admin account.");
+        } else {
+          setError(
+            error.response?.data?.message ||
+            error.message ||
             "Unable to load dashboard data."
-        );
+          );
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadDashboard();
-  }, []);
+  }, [navigate]);
 
  const stats = dashboard
   ? [

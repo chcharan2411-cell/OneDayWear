@@ -32,8 +32,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // User APIss
-            		.requestMatchers(HttpMethod.POST, "/orders").hasRole("USER")
-            		.requestMatchers(HttpMethod.GET, "/orders/my-orders").hasRole("USER")
+            		.requestMatchers(HttpMethod.POST, "/orders").hasAnyRole("USER", "ADMIN")
+            		.requestMatchers(HttpMethod.GET, "/orders/my-orders").hasAnyRole("USER", "ADMIN")
 
             		.requestMatchers(HttpMethod.GET, "/orders/*").permitAll()
             		.requestMatchers(HttpMethod.GET, "/orders").hasRole("ADMIN")

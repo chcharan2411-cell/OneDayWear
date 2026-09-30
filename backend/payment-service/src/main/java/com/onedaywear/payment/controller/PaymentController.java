@@ -94,6 +94,19 @@ public class PaymentController {
     }
 
     // ==========================================
+    // ADMIN CONFIRM PAYMENT
+    // ==========================================
+
+    @PutMapping("/{id}/confirm")
+    public ResponseEntity<PaymentResponse>
+    confirmPayment(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                paymentService.confirmPayment(id));
+    }
+
+    // ==========================================
     // COUNT
     // ==========================================
 
