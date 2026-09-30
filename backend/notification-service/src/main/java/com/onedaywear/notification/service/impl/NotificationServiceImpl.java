@@ -119,6 +119,14 @@ public class NotificationServiceImpl implements NotificationService {
         message.setSubject(subject);
         message.setText(body);
 
-        mailSender.send(message);
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+            try {
+                System.out.println("Dispatching email to: " + request.getTo());
+                mailSender.send(message);
+                System.out.println("Email sent successfully to: " + request.getTo());
+            } catch (Exception ex) {
+                System.err.println("Failed to send email to " + request.getTo() + ": " + ex.getMessage());
+            }
+        });
     }
 }

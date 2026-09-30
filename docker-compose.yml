@@ -93,7 +93,7 @@ services:
       APP_GATEWAY_URL: ${APP_GATEWAY_URL:-http://api-gateway:8080}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/onedaywear_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
     init: true
     networks:
       - onedaywear-network
@@ -216,7 +216,7 @@ services:
       MAIL_PORT: ${MAIL_PORT:-465}
       MAIL_USERNAME: ${MAIL_USERNAME:-chcharan2144@gmail.com}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-mscamecezrgorlnp}
-      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom"
+      JAVA_TOOL_OPTIONS: "-Xms64m -Xmx160m -XX:TieredStopAtLevel=1 -Djava.security.egd=file:/dev/./urandom -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
     init: true
     networks:
       - onedaywear-network

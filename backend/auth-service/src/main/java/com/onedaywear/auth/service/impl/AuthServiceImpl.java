@@ -3,6 +3,7 @@ package com.onedaywear.auth.service.impl;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -151,22 +152,23 @@ public class AuthServiceImpl implements AuthService {
                                 "EMAIL_VERIFICATION_OTP")
                         .build();
 
-        try {
-
-            /*
-             * Auth Service -> Notification Service
-             *
-             * Notification Service will send
-             * the OTP email.
-             */
-            notificationClient.sendEmail(
-                    notificationRequest);
-
-        } catch (Exception e) {
-            System.err.println("========================================");
-            System.err.println("NOTIFICATION SERVICE WARNING (Non-blocking): " + e.getMessage());
-            System.err.println("========================================");
-        }
+        /*
+         * Auth Service -> Notification Service (Asynchronous / Non-blocking)
+         *
+         * Send the OTP email in a background worker thread so the
+         * HTTP registration endpoint returns to the user immediately (in ~20ms),
+         * preventing SMTP latencies from freezing the user interface.
+         */
+        CompletableFuture.runAsync(() -> {
+            try {
+                notificationClient.sendEmail(
+                        notificationRequest);
+            } catch (Exception e) {
+                System.err.println("========================================");
+                System.err.println("NOTIFICATION SERVICE WARNING (Non-blocking): " + e.getMessage());
+                System.err.println("========================================");
+            }
+        });
 
         return new RegisterResponse(
                 "OTP sent successfully to your email", otp);

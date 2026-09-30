@@ -27,6 +27,7 @@ function Register() {
   const [success, setSuccess] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -201,6 +202,41 @@ function Register() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  /* =========================================================
+     RESEND OTP
+  ========================================================= */
+
+  const handleResendOtp = async () => {
+    setError("");
+    setSuccess("");
+    setResending(true);
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/auth/register`,
+        {
+          fullName: formData.fullName.trim(),
+          email: formData.email.trim(),
+          password: formData.password,
+          phoneNumber: formData.phoneNumber.trim(),
+        }
+      );
+
+      console.log("Resend OTP response:", response.data);
+
+      setSuccess(
+        response.data?.message ||
+          "A new verification code has been sent to your email."
+      );
+      setOtp("");
+    } catch (err) {
+      console.error("Resend OTP error:", err);
+      setError("Unable to resend OTP right now. Please try again or go back to register.");
+    } finally {
+      setResending(false);
     }
   };
 
@@ -661,13 +697,45 @@ function Register() {
                 </button>
 
 
+                {/* RESEND OTP */}
+
+                <button
+                  type="button"
+                  className="register-resend-button"
+                  onClick={handleResendOtp}
+                  disabled={loading || resending}
+                  style={{
+                    background: "transparent",
+                    border: "1px dashed rgba(220, 38, 38, 0.4)",
+                    borderRadius: "8px",
+                    color: "#f87171",
+                    fontSize: "0.82rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    cursor: "pointer",
+                    padding: "0.75rem 1rem",
+                    width: "100%",
+                    marginBottom: "0.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  <Mail size={15} />
+                  <span>
+                    {resending ? "RESENDING OTP..." : "DIDN'T GET CODE? RESEND OTP"}
+                  </span>
+                </button>
+
                 {/* BACK */}
 
                 <button
                   type="button"
                   className="register-back-button"
                   onClick={handleBackToRegister}
-                  disabled={loading}
+                  disabled={loading || resending}
                 >
                   ← BACK TO REGISTRATION
                 </button>
